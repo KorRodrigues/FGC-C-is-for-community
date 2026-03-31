@@ -23,9 +23,5 @@ dist-ssr
 *.sln
 *.sw?
 
-# Optional local secrets and env files
-.env
-.env.*
-
-# Optional test coverage output
-coverage
+*storybook.log
+storybook-static

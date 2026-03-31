@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Fighters Hub | Comunidade de Torneios de Fight Games</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Cores Sólidas */
+            --bg-primary: #F5F0E8;
+            --bg-secondary: #E8E0D5;
+            --text-primary: #2D2B28;
+            --text-secondary: #6B655A;
+            --accent-neon-pink: #FF3B5C;
+            --accent-neon-blue: #2B9EFF;
+            --accent-amber: #FFB347;
+            --accent-nature: #4A6B4F;
+            --border-color: #D1C9BF;
+            --success-green: #52B788;
+            --error-red: #E63946;
+            
+            /* Efeitos */
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.04), 0 1px 2px rgba(0, 0, 0, 0.02);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.02);
+            --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+            --glow-pink: 0 0 12px rgba(255, 59, 92, 0.4), 0 0 4px rgba(255, 59, 92, 0.6);
+            --glow-blue: 0 0 12px rgba(43, 158, 255, 0.4), 0 0 4px rgba(43, 158, 255, 0.6);
+            --glow-amber: 0 0 12px rgba(255, 179, 71, 0.4), 0 0 4px rgba(255, 179, 71, 0.6);
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            line-height: 1.5;
+            position: relative;
+        }
+
+        /* Textura de papel suave */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background-image: 
+                repeating-linear-gradient(
+                    45deg,
+                    rgba(0, 0, 0, 0.01) 0px,
+                    rgba(0, 0, 0, 0.01) 2px,
+                    transparent 2px,
+                    transparent 8px
+                ),
+                radial-gradient(
+                    ellipse at 20% 30%,
+                    rgba(255, 245, 235, 0.3) 0%,
+                    transparent 60%
+                );
+            z-index: 0;
+        }
+
+        /* Conteúdo principal com z-index */
+        .app-container {
+            position: relative;
+            z-index: 1;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(245, 240, 232, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            margin-bottom: 32px;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 16px 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .logo h1 {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-neon-pink), var(--accent-neon-blue));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
+        .logo p {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        .nav {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .nav a {
+            color: var(--text-primary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .nav a:hover {
+            color: var(--accent-neon-pink);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            background-image: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.4) 0%, transparent 80%);
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Grid de cards */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        /* Tournament Card especial */
+        .tournament-card {
+            background: var(--bg-secondary);
+            border-radius: 24px;
+            padding: 20px;
+            border-left: 4px solid var(--accent-neon-pink);
+            transition: all 0.3s ease;
+        }
+
+        .tournament-card:hover {
+            border-left-width: 6px;
+            box-shadow: var(--shadow-lg);
+            transform: translateX(4px);
+        }
+
+        .tournament-prize {
+            color: var(--accent-amber);
+            font-weight: bold;
+            font-size: 1.25rem;
+        }
+
+        .tournament-date {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        /* Botões */
+        .btn-primary {
+            background: var(--accent-neon-pink);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--shadow-sm);
+            font-family: inherit;
+        }
+
+        .btn-primary:hover {
+            background: #e62e4f;
+            transform: translateY(-1px);
+            box-shadow: var(--glow-pink);
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent-neon-blue);
+            border: 2px solid var(--accent-neon-blue);
+            padding: 10px 26px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent-neon-blue);
+            color: white;
+            box-shadow: var(--glow-blue);
+        }
+
+        .btn-success {
+            background: var(--success-green);
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 0 12px rgba(82, 183, 136, 0.4);
+        }
+
+        /* Inputs */
+        input, textarea, select {
+            background: var(--bg-primary);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 12px 16px;
+            font-size: 1rem;
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            font-family: inherit;
+            width: 100%;
+        }
+
+        input:focus, textarea:focus, select:focus {
+            outline: none;
+            border-color: var(--accent-neon-pink);
+            box-shadow: 0 0 0 3px rgba(255, 59, 92, 0.1);
+        }
+
+        input::placeholder, textarea::placeholder {
+            color: var(--text-secondary);
+        }
+
+        /* Form groups */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Badges */
+        .badge-live {
+            background: var(--accent-neon-blue);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            animation: pulse 1.5s ease infinite;
+            box-shadow: var(--glow-blue);
+        }
+
+        .badge-live::before {
+            content: '';
+            width: 8px;
+            height: 8px;
+            background: white;
+            border-radius: 50%;
+            animation: blink 1s ease infinite;
+        }
+
+        .badge-rank {
+            background: var(--accent-amber);
+            color: #2D2B28;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            box-shadow: var(--glow-amber);
+            display: inline-block;
+        }
+
+        /* Message bubbles para chat */
+        .chat-area {
+            background: var(--bg-secondary);
+            border-radius: 20px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .message-bubble {
+            background: var(--bg-primary);
+            border-radius: 18px;
+            padding: 12px 18px;
+            max-width: 80%;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border-color);
+            margin-bottom: 12px;
+        }
+
+        .message-bubble.own {
+            background: linear-gradient(135deg, var(--accent-neon-pink) 0%, #e62e4f 100%);
+            color: white;
+            margin-left: auto;
+            border: none;
+            box-shadow: var(--glow-pink);
+        }
+
+        .message-meta {
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+            opacity: 0.7;
+        }
+
+        /* Divider */
+        .divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent 0%, var(--border-color) 20%, var(--accent-nature) 50%, var(--border-color) 80%, transparent 100%);
+            margin: 32px 0;
+        }
+
+        /* Tabs / Pages */
+        .tabs {
+            display: flex;
+            gap: 12px;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 32px;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+            position: relative;
+        }
+
+        .tab.active {
+            color: var(--accent-neon-pink);
+        }
+
+        .tab.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--accent-neon-pink);
+            box-shadow: var(--glow-pink);
+        }
+
+        .tab:hover {
+            color: var(--accent-neon-pink);
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active-page {
+            display: block;
+        }
+
+        /* Select custom style */
+        select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236B655A' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 20px;
+        }
+
+        /* Checkbox e Radio */
+        .checkbox-group, .radio-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        input[type="checkbox"], input[type="radio"] {
+            width: auto;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        /* Animations */
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; box-shadow: 0 0 16px rgba(43, 158, 255, 0.6); }
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--accent-nature);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .app-container {
+                padding: 0 16px;
+            }
+            
+            .card {
+                padding: 16px;
+            }
+            
+            .btn-primary, .btn-secondary {
+                padding: 10px 20px;
+            }
+            
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .message-bubble {
+                max-width: 95%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="logo">
+                <h1>⚡ FIGHTERS HUB</h1>
+                <p>Comunidade · Competição · Amizade</p>
+            </div>
+            <div class="nav">
+                <a href="#" onclick="switchPage('home'); return false;">🏠 Início</a>
+                <a href="#" onclick="switchPage('tournaments'); return false;">🎮 Torneios</a>
+                <a href="#" onclick="switchPage('chat'); return false;">💬 Chat</a>
+                <a href="#" onclick="switchPage('profile'); return false;">👤 Perfil</a>
+            </div>
+            <button class="btn-primary" onclick="alert('Bem-vindo à comunidade! 🎮')">Entrar</button>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- Tabs / Pages -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchPage('home')">🏠 Início</button>
+            <button class="tab" onclick="switchPage('tournaments')">🎮 Torneios</button>
+            <button class="tab" onclick="switchPage('chat')">💬 Chat ao Vivo</button>
+            <button class="tab" onclick="switchPage('profile')">👤 Meu Perfil</button>
+        </div>
+
+        <!-- Page: Home -->
+        <div id="home" class="page active-page">
+            <!-- Cards Grid -->
+            <div class="cards-grid">
+                <div class="card">
+                    <span class="badge-rank" style="margin-bottom: 12px; display: inline-block;">🌟 Destaque</span>
+                    <h3 style="margin: 12px 0 8px 0;">Comunidade Ativa</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 16px;">+2.500 jogadores online agora. Participe das conversas e faça novos amigos!</p>
+                    <button class="btn-secondary" onclick="switchPage('chat')">Entrar no Chat</button>
+                </div>
+                
+                <div class="card">
+                    <div class="badge-live" style="margin-bottom: 12px;">AO VIVO</div>
+                    <h3 style="margin: 12px 0 8px 0;">Street Fighter 6</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 16px;">Torneio começando em 15min. 32 inscritos!</p>
+                    <button class="btn-primary" onclick="alert('Inscrição realizada! Boa sorte! 🎮')">Inscrever-se</button>
+                </div>
+                
+                <div class="card">
+                    <span style="font-size: 2rem; display: block; margin-bottom: 12px;">🌿</span>
+                    <h3 style="margin: 12px 0 8px 0;">Espaço Relax</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 16px;">Converse sobre estratégias, compartilhe momentos e relaxe com a galera.</p>
+                    <div style="display: flex; gap: 8px;">
+                        <span class="badge-rank">Amizade</span>
+                        <span class="badge-rank">Diversão</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulário de Inscrição Rápida -->
+            <div class="card" style="margin-bottom: 48px;">
+                <h3 style="margin-bottom: 20px;">📝 Nova Inscrição em Torneio</h3>
+                <form id="quickSignup">
+                    <div class="form-group">
+                        <label>Nome do Jogador</label>
+                        <input type="text" placeholder="Seu nickname" id="playerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Game</label>
+                        <select id="gameSelect">
+                            <option value="">Selecione um jogo</option>
+                            <option>Street Fighter 6</option>
+                            <option>Tekken 8</option>
+                            <option>Guilty Gear Strive</option>
+                            <option>King of Fighters XV</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Plataforma</label>
+                        <div class="radio-group">
+                            <input type="radio" name="platform" value="PC" id="pc"> <label for="pc">PC</label>
+                            <input type="radio" name="platform" value="PS5" id="ps5"> <label for="ps5">PS5</label>
+                            <input type="radio" name="platform" value="Xbox" id="xbox"> <label for="xbox">Xbox</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Aceita as regras da comunidade</label>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="agreeRules"> <label for="agreeRules">Concordo com os termos de fair play e amizade</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary">Confirmar Inscrição</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Page: Tournaments -->
+        <div id="tournaments" class="page">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 16px;">
+                <h2>🎮 Torneios em Destaque</h2>
+                <select style="width: auto; min-width: 200px;" id="filterGame">
+                    <option>Todos os jogos</option>
+                    <option>Street Fighter 6</option>
+                    <option>Tekken 8</option>
+                    <option>Guilty Gear Strive</option>
+                </select>
+            </div>
+            
+            <div class="cards-grid">
+                <div class="tournament-card">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                        <span class="badge-live">Inscrições Abertas</span>
+                        <span class="tournament-prize">💰 R$ 2.500</span>
+                    </div>
+                    <h3>Street Fighter 6 - Champion Cup</h3>
+                    <p class="tournament-date">📅 15 de Abril, 2026 | 19:00</p>
+                    <p style="margin: 12px 0; color: var(--text-secondary);">64 participantes · Formato Dupla Eliminação</p>
+                    <button class="btn-primary" style="width: 100%;" onclick="alert('Inscrito no torneio!')">Inscrever-se</button>
+                </div>
+                
+                <div class="tournament-card">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                        <span class="badge-rank">🔥 Premium</span>
+                        <span class="tournament-prize">💰 R$ 5.000</span>
+                    </div>
+                    <h3>Tekken 8 - King of Iron Fist</h3>
+                    <p class="tournament-date">📅 22 de Abril, 2026 | 20:00</p>
+                    <p style="margin: 12px 0; color: var(--text-secondary);">128 participantes · Formato Single Eliminação</p>
+                    <button class="btn-primary" style="width: 100%;" onclick="alert('Inscrito no torneio!')">Inscrever-se</button>
+                </div>
+                
+                <div class="tournament-card">
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                        <span class="badge-live">Inscrições Abertas</span>
+                        <span class="tournament-prize">🏆 Troféu + Prêmio</span>
+                    </div>
+                    <h3>Guilty Gear Strive - Amizade Cup</h3>
+                    <p class="tournament-date">📅 29 de Abril, 2026 | 18:30</p>
+                    <p style="margin: 12px 0; color: var(--text-secondary);">32 participantes · Formato Round Robin</p>
+                    <button class="btn-primary" style="width: 100%;" onclick="alert('Inscrito no torneio!')">Inscrever-se</button>
+                </div>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="card">
+                <h3>📊 Meus Torneios Recentes</h3>
+                <div style="margin-top: 16px;">
+                    <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-color);">
+                        <span>🏆 SF6 Weekly</span>
+                        <span class="badge-rank">3º Lugar</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--border-color);">
+                        <span>⚡ Tekken Rumble</span>
+                        <span class="badge-rank">Participação</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; padding: 12px 0;">
+                        <span>🎮 Guilty Gear Open</span>
+                        <span class="badge-rank">Em Andamento</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page: Chat -->
+        <div id="chat" class="page">
+            <div class="chat-area">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+                    <h3>💬 Chat da Comunidade</h3>
+                    <span class="badge-live">247 online agora</span>
+                </div>
+                
+                <div id="chatMessages" style="max-height: 400px; overflow-y: auto; margin-bottom: 20px;">
+                    <div class="message-bubble">
+                        <div class="message-meta">🎮 RyuMaster - 14:32</div>
+                        <div>Alguém pra treinar SF6 hoje? 💪</div>
+                    </div>
+                    <div class="message-bubble">
+                        <div class="message-meta">🌸 SakuraChan - 14:33</div>
+                        <div>Bora! Tô no lobby 3 🎯</div>
+                    </div>
+                    <div class="message-bubble own">
+                        <div class="message-meta">Você - 14:34</div>
+                        <div>Chegando lá! 🔥</div>
+                    </div>
+                    <div class="message-bubble">
+                        <div class="message-meta">🌿 RelaxGamer - 14:35</div>
+                        <div>Alguém anima um casual de Tekken depois?</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                    <input type="text" id="chatInput" placeholder="Digite sua mensagem..." style="flex: 1;">
+                    <button class="btn-primary" onclick="sendMessage()">Enviar 💬</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Page: Profile -->
+        <div id="profile" class="page">
+            <div class="cards-grid">
+                <div class="card">
+                    <div style="text-align: center;">
+                        <div style="width: 100px; height: 100px; background: var(--accent-nature); border-radius: 50%; margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; border: 3px solid var(--accent-amber); box-shadow: var(--glow-amber);">
+                            <span style="font-size: 3rem;">🎮</span>
+                        </div>
+                        <h2>Fighter_User</h2>
+                        <p style="color: var(--text-secondary); margin-bottom: 16px;">Membro desde Janeiro 2026</p>
+                        <span class="badge-rank">Nível: Guerreiro 🌟</span>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>📊 Estatísticas</h3>
+                    <div style="margin-top: 16px;">
+                        <p>🏆 Torneios disputados: <strong>12</strong></p>
+                        <p>🥇 Vitórias: <strong>3</strong></p>
+                        <p>🎯 Win Rate: <strong>67%</strong></p>
+                        <p>👥 Amigos: <strong>48</strong></p>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <h3>⚙️ Preferências</h3>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label>Nickname</label>
+                            <input type="text" value="Fighter_User" placeholder="Seu nickname">
+                        </div>
+                        <div class="form-group">
+                            <label>Jogo Principal</label>
+                            <select>
+                                <option>Street Fighter 6</option>
+                                <option>Tekken 8</option>
+                                <option>Guilty Gear Strive</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Sobre você</label>
+                            <textarea rows="3" placeholder="Compartilhe sua história nos fight games..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-success">Salvar Alterações</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="divider"></div>
+        
+        <footer style="text-align: center; padding: 32px 0; color: var(--text-secondary);">
+            <p>🎮 Fighters Hub - Onde a comunidade se encontra | Feito com 💖 para os amantes de fight games</p>
+            <p style="font-size: 0.875rem; margin-top: 8px;">© 2026 - Amizade, Competição e Diversão</p>
+        </footer>
+    </div>
+
+    <script>
+        // Função para trocar de página
+        function switchPage(pageId) {
+            // Esconde todas as páginas
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            // Mostra a página selecionada
+            document.getElementById(pageId).classList.add('active-page');
+            
+            // Atualiza as tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Ativa a tab correspondente
+            const tabs = document.querySelectorAll('.tab');
+            const pages = ['home', 'tournaments', 'chat', 'profile'];
+            const index = pages.indexOf(pageId);
+            if (tabs[index]) tabs[index].classList.add('active');
+            
+            // Scroll suave para o topo
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        
+        // Função para enviar mensagem no chat
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (message) {
+                const chatMessages = document.getElementById('chatMessages');
+                const now = new Date();
+                const time = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+                
+                const messageDiv = document.createElement('div');
+                messageDiv.className = 'message-bubble own';
+                messageDiv.innerHTML = `
+                    <div class="message-meta">Você - ${time}</div>
+                    <div>${escapeHtml(message)}</div>
+                `;
+                chatMessages.appendChild(messageDiv);
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                input.value = '';
+                
+                // Simula resposta automática (opcional)
+                setTimeout(() => {
+                    const responseDiv = document.createElement('div');
+                    responseDiv.className = 'message-bubble';
+                    responseDiv.innerHTML = `
+                        <div class="message-meta">🤖 FightBot - ${time}</div>
+                        <div>Mensagem recebida! A comunidade agradece sua participação! 🎮</div>
+                    `;
+                    chatMessages.appendChild(responseDiv);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 1000);
+            }
+        }
+        
+        // Função para escapar HTML
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
+        // Formulário de inscrição rápida
+        document.getElementById('quickSignup')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const playerName = document.getElementById('playerName').value;
+            const game = document.getElementById('gameSelect').value;
+            const agree = document.getElementById('agreeRules').checked;
+            
+            if (!playerName || !game || !agree) {
+                alert('Por favor, preencha todos os campos e aceite as regras!');
+                return;
+            }
+            
+            alert(`🎉 Inscrição confirmada, ${playerName}! Boa sorte no torneio de ${game}!`);
+            this.reset();
+        });
+        
+        // Formulário de perfil
+        document.getElementById('profileForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Perfil atualizado com sucesso! 🌟');
+        });
+        
+        // Filtro de jogos
+        document.getElementById('filterGame')?.addEventListener('change', function(e) {
+            alert(`Filtrando torneios de ${e.target.value}... (Demo)`);
+        });
+        
+        // Enter no chat
+        document.getElementById('chatInput')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
